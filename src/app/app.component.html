@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="row">
+    <app-header (navClicked)="navClicked($event)"></app-header>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <app-recipes *ngIf="whereTo === 'Recipes'; else shopping"></app-recipes>
+      <ng-template #shopping>
+        <app-shopping-list></app-shopping-list>
+      </ng-template>
+    </div>
+  </div>
+</div>
