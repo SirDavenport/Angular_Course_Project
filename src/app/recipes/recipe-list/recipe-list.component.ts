@@ -1,5 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, OnChanges, OnDestroy } from "@angular/core";
 import { Recipe } from "../recipe.model";
+import { RecipesService } from "../recipes.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-recipe-list",
@@ -7,23 +9,16 @@ import { Recipe } from "../recipe.model";
   styleUrls: ["./recipe-list.component.css"]
 })
 export class RecipeListComponent implements OnInit {
-  recipes: Recipe[] = [
-    new Recipe(
-      "Pizza Pie",
-      "Test pizza",
-      "http://pizzapieguycompany.weebly.com/uploads/5/3/0/4/53045995/s345327815338293276_p4_i1_w487.jpeg"
-    ),
-    new Recipe(
-      "Peanut Butter and Jelly",
-      "Get a load of this pbj",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Peanut-Butter-Jelly-Sandwich.png/1200px-Peanut-Butter-Jelly-Sandwich.png"
-    )
-  ];
-  @Output() recipeClicked2 = new EventEmitter<Recipe>();
-  constructor() {}
+  recipes: Recipe[];
+  sub: Subscription;
+  constructor(private recipesService: RecipesService) {}
 
-  ngOnInit() {}
-  recipeClicked(rec: Recipe) {
-    this.recipeClicked2.emit(rec);
+  ngOnInit() {
+    this.recipes = this.recipesService.getRecipes();
+    this.sub = this.recipesService.recipesChanged.subscribe(
+      (recipes: Recipe[]) => {
+        this.recipes = recipes;
+      }
+    );
   }
 }
