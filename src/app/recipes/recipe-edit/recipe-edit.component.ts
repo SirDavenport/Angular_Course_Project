@@ -45,8 +45,8 @@ export class RecipeEditComponent implements OnInit {
         for (let ingredient of recipe.ingredients) {
           recipeIngredients.push(
             new FormGroup({
-              name: new FormControl(ingredient.name),
-              amount: new FormControl(ingredient.amount)
+              name: new FormControl(ingredient.name, Validators.required),
+              amount: new FormControl(ingredient.amount, Validators.required)
             })
           );
         }
@@ -60,18 +60,25 @@ export class RecipeEditComponent implements OnInit {
     });
   }
   onSubmit() {
-    let recipe: Recipe;
-
+    let newRecipe: Recipe;
+    let recipeIngredients: Ingredient[] = [];
+    if (this.recipeForm.get("ingredients")) {
+      for (let ingredient of this.recipeForm.get("ingredients").value) {
+        recipeIngredients.push(
+          new Ingredient(ingredient.name, ingredient.amount)
+        );
+      }
+    }
     if (this.recipeForm.valid) {
-      recipe = new Recipe(
+      newRecipe = new Recipe(
         this.rs.getMaxRecipeId() + 1,
         this.recipeForm.get("name").value,
         this.recipeForm.get("description").value,
         this.recipeForm.get("imagePath").value,
-        []
+        recipeIngredients
       );
-      this.rs.addRecipe(recipe);
-      this.router.navigate(["/recipes", recipe.id]);
+      this.rs.addRecipe(newRecipe);
+      this.router.navigate(["/recipes", this.id]);
     } else {
       this.error = "Please fill out form correctly.";
     }
@@ -84,13 +91,19 @@ export class RecipeEditComponent implements OnInit {
 
   onUpdate() {
     let recipe: Recipe;
+    let recipeIngredients: Ingredient[] = [];
+    for (let ingredient of this.recipeForm.get("ingredients").value) {
+      recipeIngredients.push(
+        new Ingredient(ingredient.name, ingredient.amount)
+      );
+    }
     if (this.recipeForm.valid) {
       recipe = new Recipe(
         this.id,
         this.recipeForm.get("name").value,
         this.recipeForm.get("description").value,
         this.recipeForm.get("imagePath").value,
-        []
+        recipeIngredients
       );
       this.rs.updateRecipe(recipe, recipe.id);
       this.router.navigate(["/recipes", recipe.id]);
@@ -100,5 +113,14 @@ export class RecipeEditComponent implements OnInit {
   }
   getControls() {
     return (<FormArray>this.recipeForm.get("ingredients")).controls;
+  }
+
+  addIngredient() {
+    (<FormArray>this.recipeForm.get("ingredients")).push(
+      new FormGroup({
+        name: new FormControl(null, Validators.required),
+        amount: new FormControl(null, Validators.required)
+      })
+    );
   }
 }

@@ -23,6 +23,7 @@ export class ShoppingService {
   }
   updateItem(ingredient: Ingredient, id: number) {
     this.ingredients[id] = ingredient;
+    this.ingredientsChanged.next(this.ingredients.slice());
   }
   deleteItem(id: number) {
     this.ingredients.splice(id, 1);
