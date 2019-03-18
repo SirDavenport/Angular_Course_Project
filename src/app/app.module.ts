@@ -9,13 +9,18 @@ import { RecipeItemComponent } from "./recipes/recipe-item/recipe-item.component
 import { RecipeDetailComponent } from "./recipes/recipe-detail/recipe-detail.component";
 import { ShoppingListComponent } from "./shopping/shopping-list/shopping-list.component";
 import { RecipesComponent } from "./recipes/recipes.component";
-
+import { HttpClientModule } from "@angular/common/http";
 import { DropdownDirective } from "./shared/dropdown.directive";
 import { RecipesService } from "./recipes/recipes.service";
 import { ShoppingService } from "./shopping/shopping.service";
 import { AppRoutingModule } from "./app-routing.module";
 import { DefaultRecipePageComponent } from "./recipes/default-recipe-page/default-recipe-page.component";
 import { RecipeEditComponent } from "./recipes/recipe-edit/recipe-edit.component";
+import { DataStorageService } from "./shared/data-storage.service";
+import { SignInComponent } from "./auth/sign-in/sign-in.component";
+import { SignUpComponent } from "./auth/sign-up/sign-up.component";
+import { AuthService } from "./auth/auth.service";
+import { AuthGuard } from "./auth/auth-guard.service";
 
 @NgModule({
   declarations: [
@@ -29,10 +34,24 @@ import { RecipeEditComponent } from "./recipes/recipe-edit/recipe-edit.component
     RecipesComponent,
     DropdownDirective,
     DefaultRecipePageComponent,
-    RecipeEditComponent
+    RecipeEditComponent,
+    SignInComponent,
+    SignUpComponent
   ],
-  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule],
-  providers: [RecipesService, ShoppingService],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,
+    HttpClientModule
+  ],
+  providers: [
+    RecipesService,
+    ShoppingService,
+    DataStorageService,
+    AuthService,
+    AuthGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

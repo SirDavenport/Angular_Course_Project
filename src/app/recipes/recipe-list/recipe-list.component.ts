@@ -8,7 +8,7 @@ import { Subscription } from "rxjs";
   templateUrl: "./recipe-list.component.html",
   styleUrls: ["./recipe-list.component.css"]
 })
-export class RecipeListComponent implements OnInit {
+export class RecipeListComponent implements OnInit, OnDestroy {
   recipes: Recipe[];
   sub: Subscription;
   constructor(private recipesService: RecipesService) {}
@@ -20,5 +20,8 @@ export class RecipeListComponent implements OnInit {
         this.recipes = recipes;
       }
     );
+  }
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }
